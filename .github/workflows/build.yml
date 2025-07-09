@@ -20,10 +20,13 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Build app
-        run: ./gradlew bootJar
+      - name: Grant execute permission to Gradle Wrapper
+        run: chmod +x ./gradlew
 
-      - name: Log in to GHCR
+      - name: Build app (bootJar from :app:api)
+        run: ./gradlew :app:api:bootJar
+
+      - name: Log in to GitHub Container Registry (GHCR)
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
