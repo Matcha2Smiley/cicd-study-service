@@ -2,8 +2,6 @@ name: CI Build and Push with Auto Manifest Update
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
 
 env:
   IMAGE_NAME: ghcr.io/matcha2smiley/cicd-study-service
@@ -31,9 +29,8 @@ jobs:
       - name: Build JAR
         run: ./gradlew :app:api:bootJar
 
-      - name: Set version tag
-        id: version
-        run: echo "TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
+      - name: Set version tag (commit SHA)
+        run: echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
